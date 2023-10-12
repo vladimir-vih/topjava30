@@ -7,11 +7,6 @@
 - **Перед сборкой проекта (или запуском Tomcat) откройте вкладку Maven Projects и сделайте `clean`**
 - **Если страничка в браузере работает неверно, очистите кэш (`Ctrl+F5` в хроме)**
 
-### ![correction](https://cloud.githubusercontent.com/assets/13649199/13672935/ef09ec1e-e6e7-11e5-9f79-d1641c05cbe6.png) Правки в проекте
-
-#### Apply 2_0_fix_demo_link.patch
-Поправил ссылку на демо-приложение (на последнем занятии будем деплоить наше приложение на [выделенный хостинг](https://javaops.ru/view/startup))
-
 ### ![video](https://cloud.githubusercontent.com/assets/13649199/13672715/06dbc6ce-e6e7-11e5-81a9-04fbddb9e488.png) 1. <a href="https://drive.google.com/open?id=0B9Ye2auQ_NsFXzByNVF3VV9zM1k">Отображения списка еды в JSP</a>
 #### Apply 2_1_HW1.patch
 
