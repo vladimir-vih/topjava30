@@ -95,7 +95,7 @@
 > - Тесты и приложение ломаются. `MealServiceTest` починится после выполнения HW04 (`JpaMealRepository`)
 > - Если вы используете Java 9 и выше, то возникают проблемы с `JAXBException` (пакет `java.xml.bind`). [См. решение](https://www.concretepage.com/forum/thread?qid=531
 
-- [JPQL в JPA](https://russianblogs.com/article/74321542380/)
+- [JPA - JPQL](https://www.tutorialspoint.com/ru/jpa/jpa_jpql.htm)
 - Дополнительно:
   -  [ORM](http://ru.wikipedia.org/wiki/ORM)
   -  [JPA и Hibernate в вопросах и ответах](http://habrahabr.ru/post/265061/)
