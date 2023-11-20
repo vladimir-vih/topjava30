@@ -819,7 +819,7 @@ Spring также автоматически может изменять лок�
 ## ![question](https://cloud.githubusercontent.com/assets/13649199/13672858/9cd58692-e6e7-11e5-905d-c295d2a456f1.png) Ваши вопросы
 >  Кэш hibernate надстраивается над ehcache или живет самостоятельно?
 
-- <a href="https://akorsa.ru/2016/11/kak-rabotaet-kesh-v-hibernate/">Understanding Hibernate Caching</a>:
+- <a href="http://web.archive.org/web/20220812095400/https://akorsa.ru/2016/11/kak-rabotaet-kesh-v-hibernate/">Как работает кэш в Hibernate?/a>:
 Hibernate supports following open-source cache implementations out-of-the-box: EHCache (Easy Hibernate Cache), OSCache (Open Symphony Cache), Swarm Cache, and JBoss Tree Cache.
 
 > Где конфигурируется интернализация для jstl (т.е. файл, где задаются app, app_ru.properties)? Достаточно указать в страницах bundle и путь в ресурсы?
