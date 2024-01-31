@@ -63,6 +63,9 @@ public class JpaUserRepository implements UserRepository {
                 .setParameter(1, email)
                 .getResultList();
         return DataAccessUtils.singleResult(users);
+        /*return em.createNamedQuery(User.BY_EMAIL, User.class)
+                .setParameter(1, email)
+                .getSingleResult();*/
     }
 
     @Override

@@ -11,6 +11,13 @@
         </encoder>
     </appender>
 
+    <!--<appender name="jdbcTransaction" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %yellow(%class{50}.%M:%L) - %msg%n</pattern>
+        </encoder>
+    </appender>-->
+
     <appender name="result" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
@@ -22,7 +29,10 @@
     </logger>
 
 <!--    <logger name="org.postgresql" level="debug"/>-->
-<!--    <logger name="org.springframework.jdbc" level="info"/>-->
+<!--    <logger name="org.springframework.jdbc" level="debug" additivity="false">
+        <appender-ref ref="jdbcTransaction"/>
+    </logger>-->
+
     <logger name="ru.javawebinar.topjava" level="debug"/>
 
     <root level="INFO">

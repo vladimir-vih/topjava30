@@ -7,11 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +24,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
+@RequestMapping(value = "/meals")
 public class JspMealController extends MealRestController {
     private static final Logger log = LoggerFactory.getLogger(JspMealController.class);
 
@@ -31,7 +32,7 @@ public class JspMealController extends MealRestController {
         super(service);
     }
 
-    @GetMapping("/meals")
+    @GetMapping
     public String get(HttpServletRequest request, Model model) {
         log.info("meals");
         Map<String, String[]> paramsMap = request.getParameterMap();
@@ -47,13 +48,13 @@ public class JspMealController extends MealRestController {
         return "meals";
     }
 
-    @GetMapping("/meals/delete")
+    @GetMapping("delete")
     public String delete(HttpServletRequest request) throws IOException {
         delete(getId(request));
         return "redirect:/meals";
     }
 
-    @GetMapping("/meals/update")
+    @GetMapping("update")
     public String createOrUpdate(HttpServletRequest request, Model model) {
         String id = request.getParameter("id");
         Meal meal;
@@ -66,8 +67,8 @@ public class JspMealController extends MealRestController {
         return "mealForm";
     }
 
-    @PostMapping("/meals/save")
-    public String createOrUpdate(HttpServletRequest request, HttpServletResponse response, Model model)
+    @PostMapping("save")
+    public String createOrUpdate(HttpServletRequest request)
             throws IOException {
         request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal(
