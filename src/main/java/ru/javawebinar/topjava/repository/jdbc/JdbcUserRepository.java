@@ -16,6 +16,7 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -58,7 +59,7 @@ public class JdbcUserRepository implements UserRepository {
                     """, parameterSource);
             List<Role> newRoles = new ArrayList<>(user.getRoles());
             int userId = requireNonNull(user.getId());
-            List<Role> existingRoles = new ArrayList<>(get(userId).getRoles());
+            List<Role> existingRoles = getRoles(userId);
             List<Role> toAddRoles = getMissedItems(newRoles, existingRoles);
             List<Role> toDeleteRoles = getMissedItems(existingRoles, newRoles);
             boolean rolesNotChanged = true;
@@ -73,6 +74,12 @@ public class JdbcUserRepository implements UserRepository {
             }
         }
         return user;
+    }
+
+    private List<Role> getRoles(int userId) {
+        return jdbcTemplate.query("SELECT role FROM user_role WHERE user_id=?",
+                (rs, rowNum) -> Role.valueOf(rs.getString("role")),
+                userId);
     }
 
     private <T> List<T> getMissedItems(List<T> toCheckItems, List<T> toCheckList) {
@@ -101,7 +108,7 @@ public class JdbcUserRepository implements UserRepository {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ps.setInt(1, userId);
-                        ps.setString(2, rolesList.get(i).toString());
+                        ps.setString(2, rolesList.get(i).name());
                     }
 
                     @Override
@@ -112,12 +119,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     private boolean noUpdatesApplied(int[] updatesCount) {
-        for (int updateCount : updatesCount) {
-            if (updateCount > 0) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.stream(updatesCount).noneMatch((count) -> count > 0);
     }
 
     @Override
@@ -144,7 +146,6 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public List<User> getAll() {
-//        return jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
         return jdbcTemplate.query("SELECT u.*, r.role FROM users u " +
                 "LEFT JOIN user_role r ON r.user_id = u.id " +
                 "ORDER BY u.name, u.email", new UserWithRolesResultSetExtractor());
