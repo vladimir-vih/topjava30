@@ -1,9 +1,12 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,10 +17,9 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 import static ru.javawebinar.topjava.util.ValidationUtil.validateObject;
@@ -145,5 +147,40 @@ public class JdbcUserRepository implements UserRepository {
         return jdbcTemplate.query("SELECT u.*, r.role FROM users u " +
                 "LEFT JOIN user_role r ON r.user_id = u.id " +
                 "ORDER BY u.name, u.email", new UserWithRolesResultSetExtractor());
+    }
+
+    static class UserWithRolesResultSetExtractor implements ResultSetExtractor<List<User>> {
+        private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
+
+        @Override
+        public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
+            List<User> resultUserList = new ArrayList<>();
+            if (!rs.next()) {
+                return List.of();
+            }
+            int rowNum = 1;
+            User user = null;
+            Set<Role> roles = null;
+            do {
+                int userId = rs.getInt("id");
+                boolean userChanged = user != null && userId != requireNonNull(user.getId());
+                if (userChanged) {
+                    user.setRoles(roles);
+                    resultUserList.add(user);
+                }
+                if (user == null || userChanged) {
+                    user = requireNonNull(ROW_MAPPER.mapRow(rs, rowNum));
+                    roles = new HashSet<>();
+                }
+                String roleName = rs.getString("role");
+                if (roleName != null) {
+                    roles.add(Role.valueOf(rs.getString("role")));
+                }
+                rowNum++;
+            } while (rs.next());
+            user.setRoles(roles);
+            resultUserList.add(user);
+            return resultUserList;
+        }
     }
 }
