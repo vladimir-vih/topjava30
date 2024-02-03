@@ -15,9 +15,11 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.validateObject;
+
 @Repository
 @Transactional(readOnly = true)
-public class JdbcMealRepository extends JdbcRepositoryWithValidation implements MealRepository {
+public class JdbcMealRepository implements MealRepository {
 
     private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
 

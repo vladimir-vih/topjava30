@@ -1,12 +1,22 @@
 package ru.javawebinar.topjava.util;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import ru.javawebinar.topjava.model.AbstractBaseEntity;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.Set;
+
 public class ValidationUtil {
+    private static final Logger log = LoggerFactory.getLogger(ValidationUtil.class);
+    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private ValidationUtil() {
     }
@@ -51,5 +61,17 @@ public class ValidationUtil {
     public static Throwable getRootCause(@NonNull Throwable t) {
         Throwable rootCause = NestedExceptionUtils.getRootCause(t);
         return rootCause != null ? rootCause : t;
+    }
+
+    public static  <T> void validateObject(T object) {
+        Set<ConstraintViolation<T>> violations = validator.validate(object);
+        if (!violations.isEmpty()) {
+            StringBuilder concatenatedErrorsBuilder = new StringBuilder();
+            for (ConstraintViolation<T> violation : violations) {
+                concatenatedErrorsBuilder.append(violation.getMessage()).append("/n");
+            }
+            log.error(concatenatedErrorsBuilder.toString());
+            throw new ConstraintViolationException(violations);
+        }
     }
 }

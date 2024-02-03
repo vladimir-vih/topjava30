@@ -19,10 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
+import static ru.javawebinar.topjava.util.ValidationUtil.validateObject;
 
 @Repository
 @Transactional(readOnly = true)
-public class JdbcUserRepository extends JdbcRepositoryWithValidation implements UserRepository {
+public class JdbcUserRepository implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
