@@ -83,12 +83,8 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     private <T> List<T> getMissedItems(List<T> toCheckItems, List<T> toCheckList) {
-        List<T> missedItems = new ArrayList<>();
-        for (T itemToCheck : toCheckItems) {
-            if (!toCheckList.contains(itemToCheck)) {
-                missedItems.add(itemToCheck);
-            }
-        }
+        List<T> missedItems = new ArrayList<>(toCheckItems);
+        missedItems.removeAll(toCheckList);
         return missedItems;
     }
 
