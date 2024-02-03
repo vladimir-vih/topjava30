@@ -62,14 +62,14 @@ public class JdbcUserRepository implements UserRepository {
             List<Role> existingRoles = getRoles(userId);
             List<Role> toAddRoles = getMissedItems(newRoles, existingRoles);
             List<Role> toDeleteRoles = getMissedItems(existingRoles, newRoles);
-            boolean rolesNotChanged = true;
+            boolean rolesChanged = false;
             if (!toAddRoles.isEmpty()) {
-                rolesNotChanged = noUpdatesApplied(batchInsertRoles(userId, toAddRoles));
+                rolesChanged = updatesApplied(batchInsertRoles(userId, toAddRoles));
             }
             if (!toDeleteRoles.isEmpty()) {
-                rolesNotChanged = noUpdatesApplied(batchDeleteRoles(userId, toDeleteRoles)) && rolesNotChanged;
+                rolesChanged = updatesApplied(batchDeleteRoles(userId, toDeleteRoles)) || rolesChanged;
             }
-            if (userFieldsUpdated == 0 && rolesNotChanged) {
+            if (userFieldsUpdated == 0 && !rolesChanged) {
                 return null;
             }
         }
@@ -114,8 +114,8 @@ public class JdbcUserRepository implements UserRepository {
                 });
     }
 
-    private boolean noUpdatesApplied(int[] updatesCount) {
-        return Arrays.stream(updatesCount).noneMatch((count) -> count > 0);
+    private boolean updatesApplied(int[] updatesCount) {
+        return Arrays.stream(updatesCount).allMatch((count) -> count > 0);
     }
 
     @Override
