@@ -63,7 +63,7 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static  <T> void validateObject(T object) {
+    public static <T> void validateObject(T object) {
         Set<ConstraintViolation<T>> violations = validator.validate(object);
         if (!violations.isEmpty()) {
             StringBuilder concatenatedErrorsBuilder = new StringBuilder();
