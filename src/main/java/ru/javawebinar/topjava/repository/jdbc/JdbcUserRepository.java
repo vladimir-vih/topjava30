@@ -59,20 +59,19 @@ public class JdbcUserRepository implements UserRepository {
                        UPDATE users SET name=:name, email=:email, password=:password, 
                        registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id
                     """, parameterSource);
+            if (userFieldsUpdated == 0) {
+                return null;
+            }
             List<Role> newRoles = new ArrayList<>(user.getRoles());
             int userId = requireNonNull(user.getId());
             List<Role> existingRoles = getRoles(userId);
             List<Role> toAddRoles = getMissedItems(newRoles, existingRoles);
             List<Role> toDeleteRoles = getMissedItems(existingRoles, newRoles);
-            boolean rolesChanged = false;
             if (!toAddRoles.isEmpty()) {
-                rolesChanged = updatesApplied(batchInsertRoles(userId, toAddRoles));
+                batchInsertRoles(userId, toAddRoles);
             }
             if (!toDeleteRoles.isEmpty()) {
-                rolesChanged = updatesApplied(batchDeleteRoles(userId, toDeleteRoles)) || rolesChanged;
-            }
-            if (userFieldsUpdated == 0 && !rolesChanged) {
-                return null;
+                batchDeleteRoles(userId, toDeleteRoles);
             }
         }
         return user;
@@ -90,14 +89,14 @@ public class JdbcUserRepository implements UserRepository {
         return missedItems;
     }
 
-    private int[] batchInsertRoles(int userId, List<Role> rolesList) {
+    private void batchInsertRoles(int userId, List<Role> rolesList) {
         String sqlCommand = "INSERT INTO user_role (user_id, role) VALUES (?, ?)";
-        return rolesBatchUpdate(sqlCommand, userId, rolesList);
+        rolesBatchUpdate(sqlCommand, userId, rolesList);
     }
 
-    private int[] batchDeleteRoles(int userId, List<Role> rolesList) {
+    private void batchDeleteRoles(int userId, List<Role> rolesList) {
         String sqlCommand = "DELETE FROM user_role WHERE (user_id=? AND role=?)";
-        return rolesBatchUpdate(sqlCommand, userId, rolesList);
+        rolesBatchUpdate(sqlCommand, userId, rolesList);
     }
 
     private int[] rolesBatchUpdate(String sqlCommand, int userId, List<Role> rolesList) {
@@ -114,10 +113,6 @@ public class JdbcUserRepository implements UserRepository {
                         return rolesList.size();
                     }
                 });
-    }
-
-    private boolean updatesApplied(int[] updatesCount) {
-        return Arrays.stream(updatesCount).allMatch((count) -> count > 0);
     }
 
     @Override
