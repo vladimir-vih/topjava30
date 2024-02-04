@@ -16,9 +16,10 @@ import ru.javawebinar.topjava.ActiveDbProfileResolver;
 import ru.javawebinar.topjava.TimingRules;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.Profiles.DATAJPA;
+import static ru.javawebinar.topjava.Profiles.JPA;
 import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 
 @ContextConfiguration({
@@ -30,14 +31,14 @@ import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 public abstract class AbstractServiceTest {
 
-    @Autowired
-    protected Environment env;
-
     @ClassRule
     public static ExternalResource summary = TimingRules.SUMMARY;
 
     @Rule
     public Stopwatch stopwatch = TimingRules.STOPWATCH;
+
+    @Autowired
+    private Environment env;
 
     //  Check root cause in JUnit: https://github.com/junit-team/junit4/pull/778
     protected <T extends Throwable> void validateRootCause(Class<T> rootExceptionClass, Runnable runnable) {
@@ -51,7 +52,7 @@ public abstract class AbstractServiceTest {
     }
 
     protected boolean hasJpaProfile() {
-        List<String> activeProfiles = Arrays.stream(env.getActiveProfiles()).toList();
-        return activeProfiles.contains("jpa") || activeProfiles.contains("datajpa");
+        return Arrays.stream(env.getActiveProfiles())
+                .anyMatch((profileName) -> profileName.equals(JPA) || profileName.equals(DATAJPA));
     }
 }
