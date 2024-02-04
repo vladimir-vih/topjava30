@@ -153,28 +153,34 @@ public class JdbcUserRepository implements UserRepository {
             if (!rs.next()) {
                 return List.of();
             }
+            Set<Integer> userIdSequence = new LinkedHashSet<>();
+            Map<Integer, User> userMap = new HashMap<>();
             int rowNum = 1;
-            User user = null;
-            Set<Role> roles = null;
             do {
                 int userId = rs.getInt("id");
-                boolean userChanged = user != null && userId != requireNonNull(user.getId());
-                if (userChanged) {
-                    user.setRoles(roles);
-                    resultUserList.add(user);
-                }
-                if (user == null || userChanged) {
-                    user = requireNonNull(ROW_MAPPER.mapRow(rs, rowNum));
-                    roles = new HashSet<>();
-                }
+                userIdSequence.add(userId);
+                User user = requireNonNull(ROW_MAPPER.mapRow(rs, rowNum));
+                Set<Role> roles = null;
                 String roleName = rs.getString("role");
                 if (roleName != null) {
-                    roles.add(Role.valueOf(rs.getString("role")));
+                    roles = new HashSet<>();
+                    roles.add(Role.valueOf(roleName));
                 }
+                user.setRoles(roles);
+                userMap.merge(userId, user, (oldUser, userWithNewRole) -> {
+                    Set<Role> newRoles = userWithNewRole.getRoles();
+                    if (newRoles != null) {
+                        Set<Role> oldRoles = oldUser.getRoles();
+                        oldRoles.addAll(newRoles);
+                        oldUser.setRoles(oldRoles);
+                    }
+                    return oldUser;
+                });
                 rowNum++;
             } while (rs.next());
-            user.setRoles(roles);
-            resultUserList.add(user);
+            for (Integer id : userIdSequence) {
+                resultUserList.add(userMap.get(id));
+            }
             return resultUserList;
         }
     }
