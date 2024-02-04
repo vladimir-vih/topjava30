@@ -66,14 +66,14 @@ public class JspMealController extends AbstractMealController {
     public String save(HttpServletRequest request)
             throws IOException {
         int userId = SecurityUtil.authUserId();
-        request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
-
-        if (StringUtils.hasLength(request.getParameter("id"))) {
-            update(meal, getId(request));
+        String id = request.getParameter("id");
+        if (StringUtils.hasLength(id)) {
+            meal.setId(Integer.parseInt(id));
+            update(meal, userId);
         } else {
             create(meal, userId);
         }
