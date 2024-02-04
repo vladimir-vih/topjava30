@@ -17,7 +17,7 @@
         </c:when>
         <c:otherwise><h2><spring:message code="meal.update"/></h2></c:otherwise>
     </c:choose>
-    <form method="post" action="meals/save">
+    <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt><spring:message code="meal.date"/>:</dt>

@@ -53,17 +53,17 @@ public class JspMealController extends AbstractMealController {
         int userId = SecurityUtil.authUserId();
         String id = request.getParameter("id");
         Meal meal;
-        if (id == null || id.isEmpty()) {
-            meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
+        if (StringUtils.hasLength(id)) {
+            meal = get(Integer.parseInt(id), userId);
         } else {
-            meal = get(getId(request), userId);
+            meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         }
         model.addAttribute("meal", meal);
         return "mealForm";
     }
 
-    @PostMapping("save")
-    public String createOrUpdate(HttpServletRequest request)
+    @PostMapping
+    public String save(HttpServletRequest request)
             throws IOException {
         int userId = SecurityUtil.authUserId();
         request.setCharacterEncoding("UTF-8");
