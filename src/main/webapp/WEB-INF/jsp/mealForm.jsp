@@ -2,21 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
-<head>
-    <jsp:include page="fragments/headTag.jsp"/>
-</head>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <h2><spring:message code="meal.title"/></h2>
-    <hr>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <c:choose>
-        <c:when test="${meal.id==null}">
-            <h2><spring:message code="meal.create"/></h2>
-        </c:when>
-        <c:otherwise><h2><spring:message code="meal.update"/></h2></c:otherwise>
-    </c:choose>
+    <h2><spring:message code="${meal.id==null ? \"meal.create\" : \"meal.update\"}"/></h2>
     <form method="post" action="meals">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
