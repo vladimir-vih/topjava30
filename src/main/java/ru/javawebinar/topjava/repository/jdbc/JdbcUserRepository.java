@@ -52,8 +52,11 @@ public class JdbcUserRepository implements UserRepository {
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
-            List<Role> userRoles = new ArrayList<>(user.getRoles());
-            batchInsertRoles(user.getId(), userRoles);
+            Set<Role> rolesSet = user.getRoles();
+            if (rolesSet != null && !rolesSet.isEmpty()) {
+                List<Role> userRoles = new ArrayList<>(user.getRoles());
+                batchInsertRoles(user.getId(), userRoles);
+            }
         } else {
             int userFieldsUpdated = namedParameterJdbcTemplate.update("""
                        UPDATE users SET name=:name, email=:email, password=:password, 
