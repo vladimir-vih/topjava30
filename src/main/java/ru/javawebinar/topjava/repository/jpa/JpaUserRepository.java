@@ -53,4 +53,13 @@ public class JpaUserRepository implements UserRepository {
         return em.createNamedQuery(User.ALL_SORTED, User.class)
                 .getResultList();
     }
+
+    @Override
+    public User getWithMeals(int id) {
+        /*implemented with second separate request for the roles. 1 - user with meals, 2 - roles of user*/
+        List<User> users = em.createNamedQuery(User.WITH_MEALS, User.class)
+                .setParameter(1, id)
+                .getResultList();
+        return DataAccessUtils.singleResult(users);
+    }
 }
