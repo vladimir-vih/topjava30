@@ -95,17 +95,6 @@ public class User extends AbstractNamedEntity {
         setRoles(roles);
     }
 
-    public User(Integer id, String name, String email, String password, Set<Role> roles, List<Meal> meals) {
-        super(id, name);
-        this.email = email;
-        this.password = password;
-        this.caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
-        this.enabled = true;
-        this.registered = new Date();
-        this.meals = meals;
-        this.roles = roles;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -148,6 +137,10 @@ public class User extends AbstractNamedEntity {
 
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
     }
 
     public String getPassword() {

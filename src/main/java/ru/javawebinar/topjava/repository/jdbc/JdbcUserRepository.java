@@ -3,15 +3,13 @@ package ru.javawebinar.topjava.repository.jdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
@@ -27,6 +25,7 @@ import static ru.javawebinar.topjava.util.ValidationUtil.validateObject;
 @Repository
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
+    private static final RowMapper<Meal> MEAL_ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -130,6 +129,16 @@ public class JdbcUserRepository implements UserRepository {
                 "LEFT JOIN user_role r ON r.user_id = u.id " +
                 "WHERE u.id=?", new UserWithRolesResultSetExtractor(), id);
         return DataAccessUtils.singleResult(users);
+    }
+
+    @Override
+    public User getWithMeals(int id) {
+        User user = get(id);
+        if (user != null) {
+            user.setMeals(jdbcTemplate.query(
+                    "SELECT * FROM meal WHERE user_id=? ORDER BY date_time DESC", MEAL_ROW_MAPPER, id));
+        }
+        return user;
     }
 
     @Override
