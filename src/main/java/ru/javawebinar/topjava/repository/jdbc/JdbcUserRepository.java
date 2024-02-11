@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import java.sql.PreparedStatement;
@@ -27,19 +28,20 @@ import static ru.javawebinar.topjava.util.ValidationUtil.validateObject;
 public class JdbcUserRepository implements UserRepository {
     private static final RowMapper<Meal> MEAL_ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
     private final JdbcTemplate jdbcTemplate;
-
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
     private final SimpleJdbcInsert insertUser;
+    private final MealRepository mealRepository;
 
     @Autowired
-    public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                              MealRepository mealRepository) {
         this.insertUser = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
 
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.mealRepository = mealRepository;
     }
 
     @Override
@@ -135,8 +137,7 @@ public class JdbcUserRepository implements UserRepository {
     public User getWithMeals(int id) {
         User user = get(id);
         if (user != null) {
-            user.setMeals(jdbcTemplate.query(
-                    "SELECT * FROM meal WHERE user_id=? ORDER BY date_time DESC", MEAL_ROW_MAPPER, id));
+            user.setMeals(mealRepository.getAll(id));
         }
         return user;
     }
