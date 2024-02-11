@@ -70,7 +70,7 @@ public class ValidationUtil {
             for (ConstraintViolation<T> violation : violations) {
                 concatenatedErrorsBuilder.append(violation.getMessage()).append("/n");
             }
-            log.error(concatenatedErrorsBuilder.toString());
+            log.info(concatenatedErrorsBuilder.toString());
             throw new ConstraintViolationException(violations);
         }
     }
