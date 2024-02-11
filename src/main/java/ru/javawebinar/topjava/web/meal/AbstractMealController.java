@@ -15,32 +15,37 @@ import java.time.LocalTime;
 import java.util.List;
 
 public abstract class AbstractMealController {
-    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractMealController.class);
 
     @Autowired
     private MealService service;
 
-    public Meal get(int mealId, int userId) {
+    public Meal get(int mealId) {
+        int userId = SecurityUtil.authUserId();
         log.info("get meal {} for user {}", mealId, userId);
         return service.get(mealId, userId);
     }
 
-    public void delete(int mealId, int userId) {
+    public void delete(int mealId) {
+        int userId = SecurityUtil.authUserId();
         log.info("delete meal {} for user {}", mealId, userId);
         service.delete(mealId, userId);
     }
 
-    public List<MealTo> getAll(int userId) {
+    public List<MealTo> getAll() {
+        int userId = SecurityUtil.authUserId();
         log.info("getAll for user {}", userId);
         return MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public Meal create(Meal meal, int userId) {
+    public Meal create(Meal meal) {
+        int userId = SecurityUtil.authUserId();
         log.info("create {} for user {}", meal, userId);
         return service.create(meal, userId);
     }
 
-    public void update(Meal meal, int userId) {
+    public void update(Meal meal) {
+        int userId = SecurityUtil.authUserId();
         log.info("update {} for user {}", meal, userId);
         service.update(meal, userId);
     }
@@ -52,7 +57,8 @@ public abstract class AbstractMealController {
      * </ol>
      */
     public List<MealTo> getBetween(@Nullable LocalDate startDate, @Nullable LocalTime startTime,
-                                   @Nullable LocalDate endDate, @Nullable LocalTime endTime, int userId) {
+                                   @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
+        int userId = SecurityUtil.authUserId();
         log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
 
         List<Meal> mealsDateFiltered = service.getBetweenInclusive(startDate, endDate, userId);

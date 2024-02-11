@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -27,34 +26,31 @@ public class JspMealController extends AbstractMealController {
 
     @GetMapping
     public String get(HttpServletRequest request, Model model) {
-        int userId = SecurityUtil.authUserId();
         Map<String, String[]> paramsMap = request.getParameterMap();
         if (paramsMap != null && !paramsMap.isEmpty()) {
             LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
             LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
             LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
             LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
-            model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime, userId));
+            model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
         } else {
-            model.addAttribute("meals", getAll(userId));
+            model.addAttribute("meals", getAll());
         }
         return "meals";
     }
 
     @GetMapping("delete")
     public String delete(HttpServletRequest request) throws IOException {
-        int userId = SecurityUtil.authUserId();
-        delete(getId(request), userId);
+        delete(getId(request));
         return "redirect:/meals";
     }
 
     @GetMapping("update")
     public String createOrUpdate(HttpServletRequest request, Model model) {
-        int userId = SecurityUtil.authUserId();
         String id = request.getParameter("id");
         Meal meal;
         if (StringUtils.hasLength(id)) {
-            meal = get(Integer.parseInt(id), userId);
+            meal = get(Integer.parseInt(id));
         } else {
             meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         }
@@ -65,7 +61,6 @@ public class JspMealController extends AbstractMealController {
     @PostMapping
     public String save(HttpServletRequest request)
             throws IOException {
-        int userId = SecurityUtil.authUserId();
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
@@ -73,9 +68,9 @@ public class JspMealController extends AbstractMealController {
         String id = request.getParameter("id");
         if (StringUtils.hasLength(id)) {
             meal.setId(Integer.parseInt(id));
-            update(meal, userId);
+            update(meal);
         } else {
-            create(meal, userId);
+            create(meal);
         }
         return "redirect:/meals";
     }
