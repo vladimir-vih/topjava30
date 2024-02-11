@@ -174,7 +174,7 @@ public class JdbcUserRepository implements UserRepository {
                 int userId = rs.getInt("id");
                 User user = userMap.get(userId);
                 EnumSet<Role> newRole = extractRole(rs);
-                if( user != null) {
+                if (user != null) {
                     if (newRole != null) {
                         Set<Role> oldRoles = user.getRoles();
                         oldRoles.addAll(newRole);
