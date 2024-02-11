@@ -3,13 +3,15 @@ package ru.javawebinar.topjava.repository.jdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
@@ -21,12 +23,13 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static java.util.Objects.requireNonNull;
+import static org.springframework.util.CollectionUtils.isEmpty;
 import static ru.javawebinar.topjava.util.ValidationUtil.validateObject;
 
 @Repository
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
-    private static final RowMapper<Meal> MEAL_ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
+    public static final UserWithRolesResultSetExtractor userWithRolesExtractor = new UserWithRolesResultSetExtractor();
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertUser;
@@ -54,7 +57,7 @@ public class JdbcUserRepository implements UserRepository {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
             Set<Role> rolesSet = user.getRoles();
-            if (rolesSet != null && !rolesSet.isEmpty()) {
+            if (!isEmpty(rolesSet)) {
                 List<Role> userRoles = new ArrayList<>(user.getRoles());
                 batchInsertRoles(user.getId(), userRoles);
             }
@@ -66,8 +69,8 @@ public class JdbcUserRepository implements UserRepository {
             if (userFieldsUpdated == 0) {
                 return null;
             }
-            List<Role> newRoles = new ArrayList<>(user.getRoles());
-            int userId = requireNonNull(user.getId());
+            List<Role> newRoles = user.getRoles() == null ? new ArrayList<>() : new ArrayList<>(user.getRoles());
+            int userId = user.id();
             List<Role> existingRoles = getRoles(userId);
             List<Role> toAddRoles = getMissedItems(newRoles, existingRoles);
             List<Role> toDeleteRoles = getMissedItems(existingRoles, newRoles);
@@ -129,7 +132,7 @@ public class JdbcUserRepository implements UserRepository {
     public User get(int id) {
         List<User> users = jdbcTemplate.query("SELECT u.*, r.role FROM users u " +
                 "LEFT JOIN user_role r ON r.user_id = u.id " +
-                "WHERE u.id=?", new UserWithRolesResultSetExtractor(), id);
+                "WHERE u.id=?", userWithRolesExtractor, id);
         return DataAccessUtils.singleResult(users);
     }
 
@@ -146,7 +149,7 @@ public class JdbcUserRepository implements UserRepository {
     public User getByEmail(String email) {
         List<User> users = jdbcTemplate.query("SELECT u.*, r.role FROM users u " +
                 "LEFT JOIN user_role r ON r.user_id = u.id " +
-                "WHERE u.email=?", new UserWithRolesResultSetExtractor(), email);
+                "WHERE u.email=?", userWithRolesExtractor, email);
         return DataAccessUtils.singleResult(users);
     }
 
@@ -154,7 +157,7 @@ public class JdbcUserRepository implements UserRepository {
     public List<User> getAll() {
         return jdbcTemplate.query("SELECT u.*, r.role FROM users u " +
                 "LEFT JOIN user_role r ON r.user_id = u.id " +
-                "ORDER BY u.name, u.email", new UserWithRolesResultSetExtractor());
+                "ORDER BY u.name, u.email", userWithRolesExtractor);
     }
 
     static class UserWithRolesResultSetExtractor implements ResultSetExtractor<List<User>> {
@@ -162,39 +165,37 @@ public class JdbcUserRepository implements UserRepository {
 
         @Override
         public List<User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-            List<User> resultUserList = new ArrayList<>();
             if (!rs.next()) {
                 return List.of();
             }
-            Set<Integer> userIdSequence = new LinkedHashSet<>();
-            Map<Integer, User> userMap = new HashMap<>();
+            Map<Integer, User> userMap = new LinkedHashMap<>();
             int rowNum = 1;
             do {
                 int userId = rs.getInt("id");
-                userIdSequence.add(userId);
-                User user = requireNonNull(ROW_MAPPER.mapRow(rs, rowNum));
-                Set<Role> roles = null;
-                String roleName = rs.getString("role");
-                if (roleName != null) {
-                    roles = new HashSet<>();
-                    roles.add(Role.valueOf(roleName));
-                }
-                user.setRoles(roles);
-                userMap.merge(userId, user, (oldUser, userWithNewRole) -> {
-                    Set<Role> newRoles = userWithNewRole.getRoles();
-                    if (newRoles != null) {
-                        Set<Role> oldRoles = oldUser.getRoles();
-                        oldRoles.addAll(newRoles);
-                        oldUser.setRoles(oldRoles);
+                User user = userMap.get(userId);
+                EnumSet<Role> newRole = extractRole(rs);
+                if( user != null) {
+                    if (newRole != null) {
+                        Set<Role> oldRoles = user.getRoles();
+                        oldRoles.addAll(newRole);
                     }
-                    return oldUser;
-                });
+                } else {
+                    user = requireNonNull(ROW_MAPPER.mapRow(rs, rowNum));
+                    user.setRoles(newRole);
+                    userMap.put(userId, user);
+                }
                 rowNum++;
             } while (rs.next());
-            for (Integer id : userIdSequence) {
-                resultUserList.add(userMap.get(id));
+            return new ArrayList<>(userMap.values());
+        }
+
+        private static EnumSet<Role> extractRole(ResultSet rs) throws SQLException {
+            EnumSet<Role> roles = null;
+            String roleName = rs.getString("role");
+            if (roleName != null) {
+                roles = EnumSet.of(Role.valueOf(roleName));
             }
-            return resultUserList;
+            return roles;
         }
     }
 }
