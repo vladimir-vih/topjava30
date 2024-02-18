@@ -9,10 +9,10 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ru.javawebinar.topjava.MealTestData.adminMeal1;
-import static ru.javawebinar.topjava.MealTestData.adminMeal2;
+import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.util.MealsUtil.getTos;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserCaloriesPerDay;
 
 class RootControllerTest extends AbstractControllerTest {
 
@@ -35,13 +35,11 @@ class RootControllerTest extends AbstractControllerTest {
 
     @Test
     void getMeals() throws Exception {
-        SecurityUtil.setAuthUserId(ADMIN_ID);
         perform(get("/meals"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("meals"))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
-                .andExpect(model().attribute("meals", getTos(List.of(adminMeal2, adminMeal1),
-                        SecurityUtil.authUserCaloriesPerDay())));
+                .andExpect(model().attribute("meals", getTos(meals, authUserCaloriesPerDay())));
     }
 }
