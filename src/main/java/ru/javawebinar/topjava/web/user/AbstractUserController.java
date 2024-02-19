@@ -16,6 +16,8 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 public abstract class AbstractUserController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    public static final String WITH_MEALS_URI = "/with-meals";
+
     @Autowired
     private UserService service;
 
@@ -51,7 +53,7 @@ public abstract class AbstractUserController {
         return service.getByEmail(email);
     }
 
-    @GetMapping("/with-meals")
+    @GetMapping(value = WITH_MEALS_URI)
     public User getWithMeals(@RequestParam int id) {
         log.info("getWithMeals {}", id);
         return service.getWithMeals(id);
