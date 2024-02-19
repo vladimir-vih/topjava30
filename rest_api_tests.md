@@ -29,3 +29,13 @@ curl --request PUT 'http://localhost:8080/topjava/rest/meals?id=100005' \
 
 getBetween:
 curl 'http://localhost:8080/topjava/rest/meals/filter?startDate=2020-01-30&startTime=09%3A00%3A00&endDate=2020-01-30&endTime=14%3A00%3A00'
+
+
+AdminRestController
+getWithMeals:
+curl 'http://localhost:8080/topjava/rest/admin/users/with-meals?id=100001'
+
+
+ProfileRestController
+getWithMeals:
+curl 'http://localhost:8080/topjava/rest/profile/with-meals?id=100000'
