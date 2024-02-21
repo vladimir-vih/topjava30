@@ -20,14 +20,16 @@ import java.util.List;
 public class MealRestController extends AbstractMealController {
     static final String REST_URL = "/rest/meals";
 
+    @Override
     @GetMapping("{id}")
     public Meal get(@PathVariable int id) {
         return super.get(id);
     }
 
-    @DeleteMapping
+    @Override
+    @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestParam int id) {
+    public void delete(@PathVariable int id) {
         super.delete(id);
     }
 
@@ -47,12 +49,13 @@ public class MealRestController extends AbstractMealController {
     }
 
     @Override
-    @PutMapping
+    @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Meal meal, @RequestParam int id) {
+    public void update(@RequestBody Meal meal, @PathVariable int id) {
         super.update(meal, id);
     }
 
+    @Override
     @GetMapping("filter")
     public List<MealTo> getBetween(@Nullable @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                    @Nullable @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,

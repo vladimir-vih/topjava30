@@ -38,8 +38,7 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL)
-                .queryParam("id", String.valueOf(MEAL1_ID)))
+        perform(MockMvcRequestBuilders.delete(REST_URL + "/{id}", MEAL1_ID))
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> mealService.get(MEAL1_ID, authUserId()),
                 "MEAL1_ID still exists in Repository, but should be deleted");
@@ -73,10 +72,9 @@ class MealRestControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         Meal updated = getUpdated();
         Integer mealId = updated.id();
-        perform(MockMvcRequestBuilders.put(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL + "/{id}", MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated))
-                .queryParam("id", mealId.toString()))
+                .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         MEAL_MATCHER.assertMatch(mealService.get(mealId, authUserId()), updated);
