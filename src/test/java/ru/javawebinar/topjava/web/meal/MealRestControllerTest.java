@@ -55,7 +55,6 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void create() throws Exception {
         Meal newMeal = getNew();
-        newMeal.setId(null);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMeal)))
