@@ -71,7 +71,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void update() throws Exception {
         Meal updated = getUpdated();
-        Integer mealId = updated.id();
+        int mealId = updated.id();
         perform(MockMvcRequestBuilders.put(REST_URL + "/{id}", MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
