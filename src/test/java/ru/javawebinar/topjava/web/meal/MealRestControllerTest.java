@@ -100,4 +100,16 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_TO_MATCHER.contentJson(getTos(meals, authUserCaloriesPerDay())));
     }
+
+    @Test
+    void getBetweenForMorning31January() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "/filter")
+                .queryParam("startDate", "2020-01-31")
+                .queryParam("startTime", "00:00:00")
+                .queryParam("endDate", "2020-01-31")
+                .queryParam("endTime", "13:00:00"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealToListMorning31Jan));
+    }
 }
