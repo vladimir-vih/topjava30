@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -52,6 +53,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getWithMeals() throws Exception {
+        Assumptions.assumeTrue(isDataJpaBased());
         ResultActions action = perform(MockMvcRequestBuilders.get(REST_URL + WITH_MEALS_URI)
                 .queryParam("id", String.valueOf(USER_ID)))
                 .andExpect(status().isOk())
