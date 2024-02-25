@@ -3,8 +3,6 @@ package ru.javawebinar.topjava.web.user;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 
@@ -19,7 +17,7 @@ public abstract class AbstractUserController {
     public static final String WITH_MEALS_URI = "/with-meals";
 
     @Autowired
-    private UserService service;
+    protected UserService service;
 
     public List<User> getAll() {
         log.info("getAll");
@@ -53,8 +51,7 @@ public abstract class AbstractUserController {
         return service.getByEmail(email);
     }
 
-    @GetMapping(value = WITH_MEALS_URI)
-    public User getWithMeals(@RequestParam int id) {
+    public User getWithMeals(int id) {
         log.info("getWithMeals {}", id);
         return service.getWithMeals(id);
     }
