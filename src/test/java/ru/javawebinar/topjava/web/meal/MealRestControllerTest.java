@@ -12,8 +12,6 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -80,7 +78,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void getBetween() throws Exception {
+    void getBetweenNoExcess() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "/filter")
                 .queryParam("startDate", "2020-01-30")
                 .queryParam("startTime", "09:00:00")
@@ -88,7 +86,19 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .queryParam("endTime", "14:00:00"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_TO_MATCHER.contentJson(getTos(List.of(meal2, meal1), authUserCaloriesPerDay())));
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealToListMorning30Jan));
+    }
+
+    @Test
+    void getBetweenWithExcess() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "/filter")
+                .queryParam("startDate", "2020-01-31")
+                .queryParam("startTime", "00:00:00")
+                .queryParam("endDate", "2020-01-31")
+                .queryParam("endTime", "13:00:00"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MEAL_TO_MATCHER.contentJson(mealToListMorning31Jan));
     }
 
     @Test
@@ -99,17 +109,5 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_TO_MATCHER.contentJson(getTos(meals, authUserCaloriesPerDay())));
-    }
-
-    @Test
-    void getBetweenForMorning31January() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "/filter")
-                .queryParam("startDate", "2020-01-31")
-                .queryParam("startTime", "00:00:00")
-                .queryParam("endDate", "2020-01-31")
-                .queryParam("endTime", "13:00:00"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_TO_MATCHER.contentJson(mealToListMorning31Jan));
     }
 }

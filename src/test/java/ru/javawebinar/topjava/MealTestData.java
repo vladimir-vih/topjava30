@@ -31,6 +31,7 @@ public class MealTestData {
 
     public static final List<Meal> meals = List.of(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
 
+    public static final List<MealTo> mealToListMorning30Jan = List.of(createTo(meal2, false), createTo(meal1, false));
     public static final List<MealTo> mealToListMorning31Jan = List.of(createTo(meal5, true), createTo(meal4, true));
 
     public static Meal getNew() {
