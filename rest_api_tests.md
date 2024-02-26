@@ -10,7 +10,7 @@ curl 'http://localhost:8080/topjava/rest/meals/100003'
 curl 'http://localhost:8080/topjava/rest/meals/'
 
 ### 1.3 Delete meal by ID:
-curl --request DELETE 'http://localhost:8080/topjava/rest/meals?id=100004'
+curl --request DELETE 'http://localhost:8080/topjava/rest/meals/100004'
 
 ### 1.4 Create meal:
 curl 'http://localhost:8080/topjava/rest/meals' \
@@ -22,7 +22,7 @@ curl 'http://localhost:8080/topjava/rest/meals' \
 }'
 
 ### 1.5 Update meal:
-curl --request PUT 'http://localhost:8080/topjava/rest/meals?id=100005' \
+curl --request PUT 'http://localhost:8080/topjava/rest/meals/100005' \
 --header 'Content-Type: application/json' \
 --data '{
 "dateTime": "2024-02-19T19:00:00",
