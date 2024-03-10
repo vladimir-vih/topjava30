@@ -11,7 +11,7 @@
 <div class="jumbotron pt-4">
     <div class="container">
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
-        <form>
+        <form id="filterForm">
             <div class="form-group row">
                 <label for="inputFilterStartDate" class="col-sm-2 col-form-label"><spring:message code="meal.startDate"/>:</label>
                 <div class="col-sm-3">
@@ -39,6 +39,11 @@
             <div class="form-group row">
                 <div class="col-sm-10">
                     <button type="button" onclick="reloadFiltered()" class="btn btn-primary"><spring:message code="meal.filter"/></button>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button type="button" onclick="resetFilter()" class="btn btn-primary"><spring:message code="meal.resetFilter"/></button>
                 </div>
             </div>
         </form>

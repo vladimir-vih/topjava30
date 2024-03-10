@@ -50,6 +50,12 @@ function reloadFiltered() {
         "&startTime=" + startTime +
         "&endTime=" + endTime,
         function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
-    });
+            ctx.datatableApi.clear().rows.add(data).draw();
+        });
+}
+
+function resetFilter() {
+    let form = $('#filterForm');
+    form.find(":input").val("");
+    reloadFiltered();
 }
