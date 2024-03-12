@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.User;
 
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
 
@@ -60,5 +61,12 @@ public class AdminRestController extends AbstractUserController {
     @GetMapping("/{id}/with-meals")
     public User getWithMeals(@PathVariable int id) {
         return super.getWithMeals(id);
+    }
+
+    @PostMapping("/enable/{id}/{state}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeState(@PathVariable @NotNull Integer id,
+                            @PathVariable @NotNull Boolean state) {
+        super.changeState(id, state);
     }
 }
