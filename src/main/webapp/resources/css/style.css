@@ -15,11 +15,11 @@ dd {
     vertical-align: top;
 }
 
-tr[data-meal-excess="false"] {
+tr[data-meal-excess="false"], tr[user-enabled="true"] {
     color: green;
 }
 
-tr[data-meal-excess="true"] {
+tr[data-meal-excess="true"], tr[user-enabled="false"]  {
     color: red;
 }
 
@@ -32,9 +32,11 @@ html {
     position: relative;
     min-height: 100%;
 }
+
 body {
     margin-bottom: 60px !important; /* Margin bottom by footer height */
 }
+
 .footer {
     position: absolute;
     bottom: 0;
