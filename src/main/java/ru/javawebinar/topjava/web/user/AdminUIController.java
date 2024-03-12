@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -31,5 +32,12 @@ public class AdminUIController extends AbstractUserController {
                        @RequestParam String email,
                        @RequestParam String password) {
         super.create(new User(null, name, email, password, Role.USER));
+    }
+
+    @PostMapping("/{id}/{state}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeState(@PathVariable @NotNull Integer id,
+                            @PathVariable @NotNull Boolean state) {
+        super.changeState(id, state);
     }
 }

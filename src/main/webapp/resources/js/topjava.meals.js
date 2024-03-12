@@ -58,4 +58,5 @@ function resetFilter() {
     let form = $('#filterForm');
     form.find(":input").val("");
     reloadFiltered();
+    successNoty("Filter reset");
 }
