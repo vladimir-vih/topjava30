@@ -38,7 +38,7 @@
             </div>
             <div class="form-group row">
                 <div class="col-sm-10">
-                    <button type="button" onclick="reloadFiltered()" class="btn btn-primary"><spring:message code="meal.filter"/></button>
+                    <button type="button" onclick="updateTable()" class="btn btn-primary"><spring:message code="meal.filter"/></button>
                 </div>
             </div>
             <div class="form-group row">

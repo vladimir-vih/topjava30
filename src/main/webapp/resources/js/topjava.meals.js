@@ -39,7 +39,7 @@ $(function () {
     );
 });
 
-function reloadFiltered() {
+function updateTable() {
     let startDate = document.getElementById("inputFilterStartDate").value;
     let endDate = document.getElementById("inputFilterEndDate").value;
     let startTime = document.getElementById("inputFilterStartTime").value;
@@ -57,6 +57,6 @@ function reloadFiltered() {
 function resetFilter() {
     let form = $('#filterForm');
     form.find(":input").val("");
-    reloadFiltered();
+    updateTable();
     successNoty("Filter reset");
 }
