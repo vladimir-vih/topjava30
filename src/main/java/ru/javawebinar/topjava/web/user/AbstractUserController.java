@@ -15,7 +15,7 @@ public abstract class AbstractUserController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    protected UserService service;
+    private UserService service;
 
     public List<User> getAll() {
         log.info("getAll");
@@ -54,7 +54,7 @@ public abstract class AbstractUserController {
         return service.getWithMeals(id);
     }
 
-    public void changeState(Integer id, Boolean state) {
+    public void changeState(int id, boolean state) {
         log.info("changeState with id={} and state={}", id, state);
         service.changeState(id, state);
     }

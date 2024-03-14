@@ -36,8 +36,8 @@ public class AdminUIController extends AbstractUserController {
 
     @PostMapping("/{id}/{state}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeState(@PathVariable @NotNull Integer id,
-                            @PathVariable @NotNull Boolean state) {
+    public void changeState(@PathVariable @NotNull int id,
+                            @PathVariable @NotNull boolean state) {
         super.changeState(id, state);
     }
 }
