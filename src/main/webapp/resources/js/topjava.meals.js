@@ -40,17 +40,14 @@ $(function () {
 });
 
 function updateTable() {
-    let startDate = document.getElementById("inputFilterStartDate").value;
-    let endDate = document.getElementById("inputFilterEndDate").value;
-    let startTime = document.getElementById("inputFilterStartTime").value;
-    let endTime = document.getElementById("inputFilterEndTime").value;
-    $.get(mealAjaxUrl + "filter?" +
-        "startDate=" + startDate +
-        "&endDate=" + endDate +
-        "&startTime=" + startTime +
-        "&endTime=" + endTime,
+    let filterForm = $('#filterForm');
+    $.ajax({
+        type: "GET",
+        url: mealAjaxUrl + "filter",
+        data: filterForm.serialize()
+    }).done(
         function (data) {
-            ctx.datatableApi.clear().rows.add(data).draw();
+            populateTable(data);
         });
 }
 

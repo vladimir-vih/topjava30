@@ -46,6 +46,12 @@ $(function () {
     );
 });
 
+function updateTable() {
+    $.get(ctx.ajaxUrl, function (data) {
+        populateTable(data);
+    });
+}
+
 function changeState(event) {
     let id = event.target.closest('tr').getAttribute('id');
     let newState = event.target.checked;

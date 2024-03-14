@@ -13,27 +13,27 @@
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
         <form id="filterForm">
             <div class="form-group row">
-                <label for="inputFilterStartDate" class="col-sm-2 col-form-label"><spring:message code="meal.startDate"/>:</label>
+                <label for="startDate" class="col-sm-2 col-form-label"><spring:message code="meal.startDate"/>:</label>
                 <div class="col-sm-3">
-                    <input type="date" class="form-control" id="inputFilterStartDate">
+                    <input type="date" class="form-control" id="startDate" name="startDate">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="inputFilterEndDate" class="col-sm-2 col-form-label"><spring:message code="meal.endDate"/>:</label>
+                <label for="endDate" class="col-sm-2 col-form-label"><spring:message code="meal.endDate"/>:</label>
                 <div class="col-sm-3">
-                    <input type="date" class="form-control" id="inputFilterEndDate">
+                    <input type="date" class="form-control" id="endDate" name="endDate">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="inputFilterStartTime" class="col-sm-2 col-form-label"><spring:message code="meal.startTime"/>:</label>
+                <label for="startTime" class="col-sm-2 col-form-label"><spring:message code="meal.startTime"/>:</label>
                 <div class="col-sm-3">
-                    <input type="time" class="form-control" id="inputFilterStartTime">
+                    <input type="time" class="form-control" id="startTime" name="startTime">
                 </div>
             </div>
             <div class="form-group row">
-                <label for="inputFilterEndTime" class="col-sm-2 col-form-label"><spring:message code="meal.endTime"/>:</label>
+                <label for="endTime" class="col-sm-2 col-form-label"><spring:message code="meal.endTime"/>:</label>
                 <div class="col-sm-3">
-                    <input type="time" class="form-control" id="inputFilterEndTime">
+                    <input type="time" class="form-control" id="endTime" name="endTime">
                 </div>
             </div>
             <div class="form-group row">
