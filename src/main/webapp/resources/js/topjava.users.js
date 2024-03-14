@@ -56,7 +56,7 @@ function changeState(event) {
     let checkBox = event.target;
     let id = checkBox.closest('tr').getAttribute('id');
     let newState = checkBox.checked;
-    $.post(ctx.ajaxUrl + id + "/" + newState)
+    $.post(ctx.ajaxUrl + id + "?state=" + newState)
         .done(function () {
             checkBox.closest('tr').setAttribute("user-enabled", newState);
             successNoty("User state changed");

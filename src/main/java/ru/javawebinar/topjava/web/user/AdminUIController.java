@@ -34,10 +34,11 @@ public class AdminUIController extends AbstractUserController {
         super.create(new User(null, name, email, password, Role.USER));
     }
 
-    @PostMapping("/{id}/{state}")
+    @Override
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void changeState(@PathVariable @NotNull int id,
-                            @PathVariable @NotNull boolean state) {
+                            @RequestParam @NotNull boolean state) {
         super.changeState(id, state);
     }
 }
