@@ -52,8 +52,7 @@ function updateTable() {
 }
 
 function resetFilter() {
-    let form = $('#filterForm');
-    form.find(":input").val("");
+    document.getElementById("filterForm").reset();
     updateTable();
     successNoty("Filter reset");
 }
