@@ -1,4 +1,4 @@
-const mealAjaxUrl = "ajax/meals";
+const mealAjaxUrl = "ajax/meals/";
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
     ajaxUrl: mealAjaxUrl
@@ -44,7 +44,7 @@ function updateTable() {
     let endDate = document.getElementById("inputFilterEndDate").value;
     let startTime = document.getElementById("inputFilterStartTime").value;
     let endTime = document.getElementById("inputFilterEndTime").value;
-    $.get(mealAjaxUrl + "/filter?" +
+    $.get(mealAjaxUrl + "filter?" +
         "startDate=" + startDate +
         "&endDate=" + endDate +
         "&startTime=" + startTime +
