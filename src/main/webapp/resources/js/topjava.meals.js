@@ -53,6 +53,8 @@ function updateTable() {
 
 function resetFilter() {
     document.getElementById("filterForm").reset();
-    updateTable();
+    $.get(mealAjaxUrl, function (data) {
+        populateTable(data);
+    })
     successNoty("Filter reset");
 }
