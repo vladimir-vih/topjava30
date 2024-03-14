@@ -75,10 +75,10 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     @Transactional
-    public int changeState(int id, boolean state) {
+    public boolean changeState(int id, boolean state) {
         return em.createNamedQuery(User.CHANGE_STATE)
                 .setParameter("id", id)
                 .setParameter("enabled", state)
-                .executeUpdate();
+                .executeUpdate() != 0;
     }
 }

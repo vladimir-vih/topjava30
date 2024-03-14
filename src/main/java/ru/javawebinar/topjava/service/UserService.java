@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -59,8 +58,6 @@ public class UserService {
 
     @CacheEvict(value = "users", allEntries = true)
     public void changeState(int id, boolean state) {
-        if (repository.changeState(id, state) == 0) {
-            throw new NotFoundException("User not found");
-        }
+        checkNotFoundWithId(repository.changeState(id, state), id);
     }
 }

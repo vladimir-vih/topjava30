@@ -48,7 +48,7 @@ public class DataJpaUserRepository implements UserRepository {
     }
 
     @Override
-    public int changeState(int id, boolean state) {
-        return crudRepository.changeState(id, state);
+    public boolean changeState(int id, boolean state) {
+        return crudRepository.changeState(id, state) != 0;
     }
 }
