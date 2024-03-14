@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -37,8 +36,8 @@ public class AdminUIController extends AbstractUserController {
     @Override
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeState(@PathVariable @NotNull int id,
-                            @RequestParam @NotNull boolean state) {
+    public void changeState(@PathVariable int id,
+                            @RequestParam boolean state) {
         super.changeState(id, state);
     }
 }

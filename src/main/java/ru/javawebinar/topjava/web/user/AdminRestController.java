@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.User;
 
-import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
 
@@ -64,10 +63,10 @@ public class AdminRestController extends AbstractUserController {
     }
 
     @Override
-    @PatchMapping("/enable/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeState(@PathVariable @NotNull int id,
-                            @RequestParam @NotNull boolean state) {
+    public void changeState(@PathVariable int id,
+                            @RequestParam boolean state) {
         super.changeState(id, state);
     }
 }
