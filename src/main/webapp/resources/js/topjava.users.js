@@ -53,10 +53,15 @@ function updateTable() {
 }
 
 function changeState(event) {
-    let id = event.target.closest('tr').getAttribute('id');
-    let newState = event.target.checked;
-    $.post(ctx.ajaxUrl + id + "/" + newState, function () {
-        updateTable();
-        successNoty("User state changed");
-    });
+    let checkBox = event.target;
+    let id = checkBox.closest('tr').getAttribute('id');
+    let newState = checkBox.checked;
+    $.post(ctx.ajaxUrl + id + "/" + newState)
+        .done(function () {
+            checkBox.closest('tr').setAttribute("user-enabled", newState);
+            successNoty("User state changed");
+        })
+        .fail(function () {
+            checkBox.checked = !newState;
+        });
 }
