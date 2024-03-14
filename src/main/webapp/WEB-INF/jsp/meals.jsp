@@ -15,25 +15,25 @@
             <div class="form-group row">
                 <label for="inputFilterStartDate" class="col-sm-2 col-form-label"><spring:message code="meal.startDate"/>:</label>
                 <div class="col-sm-3">
-                    <input type="date" class="form-control" id="inputFilterStartDate" placeholder="${param.startDate}">
+                    <input type="date" class="form-control" id="inputFilterStartDate">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputFilterEndDate" class="col-sm-2 col-form-label"><spring:message code="meal.endDate"/>:</label>
                 <div class="col-sm-3">
-                    <input type="date" class="form-control" id="inputFilterEndDate" placeholder="${param.endDate}">
+                    <input type="date" class="form-control" id="inputFilterEndDate">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputFilterStartTime" class="col-sm-2 col-form-label"><spring:message code="meal.startTime"/>:</label>
                 <div class="col-sm-3">
-                    <input type="time" class="form-control" id="inputFilterStartTime" placeholder="${param.startTime}">
+                    <input type="time" class="form-control" id="inputFilterStartTime">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputFilterEndTime" class="col-sm-2 col-form-label"><spring:message code="meal.endTime"/>:</label>
                 <div class="col-sm-3">
-                    <input type="time" class="form-control" id="inputFilterEndTime" placeholder="${param.endTime}">
+                    <input type="time" class="form-control" id="inputFilterEndTime">
                 </div>
             </div>
             <div class="form-group row">
