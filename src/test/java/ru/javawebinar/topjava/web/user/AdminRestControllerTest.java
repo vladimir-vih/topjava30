@@ -1,14 +1,11 @@
 package ru.javawebinar.topjava.web.user;
 
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.Assert;
-import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -101,8 +98,8 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void changeState() throws Exception {
-        assumeDataJpa();
-        perform(MockMvcRequestBuilders.post(REST_URL + "/enable/" + USER_ID + "/false"))
+        perform(MockMvcRequestBuilders.patch(REST_URL + "/enable/" + USER_ID)
+                .queryParam("state", "false"))
                 .andExpect(status().isNoContent())
                 .andDo(print());
         User user = userService.get(USER_ID);
