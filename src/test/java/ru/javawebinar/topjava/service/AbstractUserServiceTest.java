@@ -89,7 +89,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     void changeState() {
-        assumeDataJpa();
         service.changeState(USER_ID, false);
         User user = service.get(USER_ID);
         Assert.isTrue(!user.isEnabled(), "User state didn't change");

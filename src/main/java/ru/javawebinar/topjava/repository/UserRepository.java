@@ -23,7 +23,7 @@ public interface UserRepository {
         throw new UnsupportedOperationException();
     }
 
-    default void changeState(int id, boolean state) {
+    default int changeState(int id, boolean state) {
         throw new UnsupportedOperationException();
     }
 }
