@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.to;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.*;
@@ -16,7 +15,6 @@ public class MealTo extends BaseTo implements Serializable {
 
     @NotNull
     @PastOrPresent
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private final LocalDateTime dateTime;
 
     @NotBlank
