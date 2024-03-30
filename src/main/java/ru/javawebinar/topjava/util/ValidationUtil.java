@@ -2,12 +2,15 @@ package ru.javawebinar.topjava.util;
 
 
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.validation.BindingResult;
 import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.*;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ValidationUtil {
 
@@ -71,5 +74,19 @@ public class ValidationUtil {
     public static Throwable getRootCause(@NonNull Throwable t) {
         Throwable rootCause = NestedExceptionUtils.getRootCause(t);
         return rootCause != null ? rootCause : t;
+    }
+
+    public static ResponseEntity<String> getErrorInfoResponse(BindingResult result) {
+        String errorFieldsMsg = result.getFieldErrors().stream()
+                .map(fe -> {
+                    String fieldName = fe.getField();
+                    String errorMessage = fe.getDefaultMessage();
+                    if (fieldName.equals("calories") && fe.getRejectedValue().toString().isEmpty()) {
+                        errorMessage = "calories cant't be empty";
+                    }
+                    return String.format("[%s] %s", fieldName, errorMessage);
+                })
+                .collect(Collectors.joining("<br>"));
+        return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
     }
 }

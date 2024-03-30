@@ -11,7 +11,7 @@ import ru.javawebinar.topjava.to.UserTo;
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.javawebinar.topjava.web.WebUtils.getErrorInfoResponse;
+import static ru.javawebinar.topjava.util.ValidationUtil.getErrorInfoResponse;
 
 @RestController
 @RequestMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -14,8 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.MealsUtil.createFromTo;
-import static ru.javawebinar.topjava.web.WebUtils.getErrorInfoResponse;
+import static ru.javawebinar.topjava.util.ValidationUtil.getErrorInfoResponse;
 
 @RestController
 @RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
