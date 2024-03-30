@@ -11,9 +11,6 @@ import ru.javawebinar.topjava.service.MealService;
 public class RootController {
     private static final Logger log = LoggerFactory.getLogger(RootController.class);
 
-    @Autowired
-    private MealService mealService;
-
     @GetMapping("/")
     public String root() {
         log.info("root");
