@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.DATE_TIME_FORMATTER;
+
 public class DateTimeFormatters {
     public static class LocalDateFormatter implements Formatter<LocalDate> {
 
@@ -36,11 +38,9 @@ public class DateTimeFormatters {
     }
 
     public static class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
-        public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm");
-
         @Override
         public LocalDateTime parse(String text, Locale locale) {
-            return LocalDateTime.parse(text, dateTimeFormatter);
+            return LocalDateTime.parse(text, DATE_TIME_FORMATTER);
         }
 
         @Override
