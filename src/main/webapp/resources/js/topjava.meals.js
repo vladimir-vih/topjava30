@@ -67,38 +67,42 @@ $(function () {
 });
 
 $(function(){
-    $('#startDate').datetimepicker({
+    let startDate = $('#startDate');
+    let endDate = $('#endDate');
+    let startTime = $('#startTime');
+    let endTime = $('#endTime');
+    startDate.datetimepicker({
         format:'Y-m-d',
         onShow:function( ct ){
             this.setOptions({
-                maxDate:$('#endDate').val()?$('#endDate').val():false
+                maxDate:endDate.val()?endDate.val():false
             })
         },
         timepicker:false
     });
-    $('#endDate').datetimepicker({
+    endDate.datetimepicker({
         format:'Y-m-d',
         onShow:function( ct ){
             this.setOptions({
-                minDate:$('#startDate').val()?$('#startDate').val():false
+                minDate:startDate.val()?startDate.val():false
             })
         },
         timepicker:false
     });
-    $('#startTime').datetimepicker({
+    startTime.datetimepicker({
         format:'H:i',
         onShow:function( ct ){
             this.setOptions({
-                maxTime:$('#endTime').val()?$('#endTime').val():false
+                maxTime:endTime.val()?endTime.val():false
             })
         },
         datepicker:false
     });
-    $('#endTime').datetimepicker({
+    endTime.datetimepicker({
         format:'H:i',
         onShow:function( ct ){
             this.setOptions({
-                minTime:$('#startTime').val()?$('#startTime').val():false
+                minTime:startTime.val()?startTime.val():false
             })
         },
         datepicker:false
