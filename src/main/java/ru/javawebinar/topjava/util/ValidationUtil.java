@@ -78,14 +78,7 @@ public class ValidationUtil {
 
     public static ResponseEntity<String> getErrorInfoResponse(BindingResult result) {
         String errorFieldsMsg = result.getFieldErrors().stream()
-                .map(fe -> {
-                    String fieldName = fe.getField();
-                    String errorMessage = fe.getDefaultMessage();
-                    if (fieldName.equals("calories") && fe.getRejectedValue().toString().isEmpty()) {
-                        errorMessage = "calories cant't be empty";
-                    }
-                    return String.format("[%s] %s", fieldName, errorMessage);
-                })
+                .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                 .collect(Collectors.joining("<br>"));
         return ResponseEntity.unprocessableEntity().body(errorFieldsMsg);
     }
