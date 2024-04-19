@@ -129,7 +129,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void createInvalid() throws Exception {
         User newUser = getNew();
         newUser.setEmail("testmail");
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
                 .content(jsonWithPassword(newUser, newUser.getPassword())))

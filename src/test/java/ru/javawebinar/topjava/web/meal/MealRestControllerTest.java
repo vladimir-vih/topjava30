@@ -113,7 +113,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     void createInvalid() throws Exception {
         Meal newMeal = getNew();
         newMeal.setCalories(0);
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
                 .content(JsonUtil.writeValue(newMeal)))
