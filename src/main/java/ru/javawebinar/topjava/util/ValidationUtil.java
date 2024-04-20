@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
@@ -9,12 +10,16 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.*;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ValidationUtil {
 
     private static final Validator validator;
+    private static final Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
+            "users_unique_email_idx", "user.email.duplicate"/*,
+            "meals_unique_user_datetime_idx", EXCEPTION_DUPLICATE_DATETIME.name()*/);
 
     static {
         //  From Javadoc: implementations are thread-safe and instances are typically cached and reused.
@@ -86,5 +91,15 @@ public class ValidationUtil {
         if (result.hasErrors()) {
             throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result));
         }
+    }
+
+    public static String getConstraintsErrorInfo(Exception e, MessageSourceAccessor messageSourceAccessor) {
+        String lowerCaseMsg = e.getMessage().toLowerCase();
+        for (Map.Entry<String, String> entry : CONSTRAINS_I18N_MAP.entrySet()) {
+            if (lowerCaseMsg.contains(entry.getKey())) {
+                return messageSourceAccessor.getMessage(entry.getValue());
+            }
+        }
+        return lowerCaseMsg;
     }
 }
