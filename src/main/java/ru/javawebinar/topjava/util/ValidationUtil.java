@@ -18,8 +18,8 @@ public class ValidationUtil {
 
     private static final Validator validator;
     private static final Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
-            "users_unique_email_idx", "user.email.duplicate"/*,
-            "meals_unique_user_datetime_idx", EXCEPTION_DUPLICATE_DATETIME.name()*/);
+            "users_unique_email_idx", "user.email.duplicate",
+            "meal_unique_user_datetime_idx", "meal.dateTime.duplicate");
 
     static {
         //  From Javadoc: implementations are thread-safe and instances are typically cached and reused.

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -23,6 +25,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 import static ru.javawebinar.topjava.UserTestData.user;
 import static ru.javawebinar.topjava.util.MealsUtil.createTo;
 import static ru.javawebinar.topjava.util.MealsUtil.getTos;
+import static ru.javawebinar.topjava.util.exception.ErrorType.DATA_ERROR;
 import static ru.javawebinar.topjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 class MealRestControllerTest extends AbstractControllerTest {
@@ -94,6 +97,18 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void updateDuplicatedDateTime() throws Exception {
+        Meal updated = getUpdated();
+        updated.setDateTime(meal2.getDateTime());
+        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isConflict())
+                .andExpect(content().string(containsString(DATA_ERROR.name())));
+    }
+
+    @Test
     void createWithLocation() throws Exception {
         Meal newMeal = getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -119,6 +134,19 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(newMeal)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().string(containsString(VALIDATION_ERROR.name())));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void createDuplicatedDateTime() throws Exception {
+        Meal newMeal = getNew();
+        newMeal.setDateTime(meal2.getDateTime());
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(newMeal)))
+                .andExpect(status().isConflict())
+                .andExpect(content().string(containsString(DATA_ERROR.name())));
     }
 
     @Test
