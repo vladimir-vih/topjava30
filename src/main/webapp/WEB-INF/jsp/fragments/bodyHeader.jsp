@@ -30,7 +30,7 @@
             </form:form>
         </sec:authorize>
         <div class="nav-item dropdown">
-            <a class="dropdown-toggle nav-link my-1 ml-2" data-toggle="dropdown">${empty param.lang ? "ru" : param.lang}</a>
+            <a class="dropdown-toggle nav-link my-1 ml-2" data-toggle="dropdown">${pageContext.response.locale}</a>
             <div class="dropdown-menu">
                 <c:set var="servletPath" value="${pageContext.request.getServletPath()}"/>
                 <c:set var="servletName" value="${servletPath.substring(servletPath.lastIndexOf('/') + 1, servletPath.indexOf('.'))}"/>
