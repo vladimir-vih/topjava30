@@ -34,6 +34,11 @@
             <div class="dropdown-menu">
                 <c:set var="servletPath" value="${pageContext.request.getServletPath()}"/>
                 <c:set var="servletName" value="${servletPath.substring(servletPath.lastIndexOf('/') + 1, servletPath.indexOf('.'))}"/>
+                <sec:authorize access="isAnonymous()">
+                    <c:if test="${servletName.equals(\"profile\")}">
+                        <c:set var="servletName" value="${servletName}/register"/>
+                    </c:if>
+                </sec:authorize>
                 <a class="dropdown-item" href="${pageContext.request.contextPath}/${servletName}?lang=en">English</a>
                 <a class="dropdown-item" href="${pageContext.request.contextPath}/${servletName}?lang=ru">Русский</a>
             </div>

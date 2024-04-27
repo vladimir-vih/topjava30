@@ -18,7 +18,7 @@ public class ProfileUIController extends AbstractUserController {
 
     @GetMapping
     public String profile() {
-        return "profile";
+            return "profile";
     }
 
     @PostMapping
