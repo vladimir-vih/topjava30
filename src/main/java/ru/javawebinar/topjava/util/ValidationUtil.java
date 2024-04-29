@@ -93,8 +93,7 @@ public class ValidationUtil {
 
     public static String getConstraintsErrorText(ConstraintError constraintError,
                                                  MessageSourceAccessor messageSourceAccessor) {
-        return messageSourceAccessor.getMessage(CONSTRAINS_I18N_MAP.get(constraintError.getFieldName())
-                .getMessageCode());
+        return messageSourceAccessor.getMessage(constraintError.getMessageCode());
     }
 
     public static ConstraintError getConstraintsError(Exception e) {
