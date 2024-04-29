@@ -10,16 +10,20 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.*;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.javawebinar.topjava.util.ConstraintError.DATE_TIME_DUPLICATE;
+import static ru.javawebinar.topjava.util.ConstraintError.EMAIL_DUPLICATE;
+
 public class ValidationUtil {
 
     private static final Validator validator;
-    private static final Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
-            "users_unique_email_idx", "user.email.duplicate",
-            "meal_unique_user_datetime_idx", "meal.dateTime.duplicate");
+    private static final Map<String, ConstraintError> CONSTRAINS_I18N_MAP = Map.of(
+            "users_unique_email_idx", EMAIL_DUPLICATE,
+            "meal_unique_user_datetime_idx", DATE_TIME_DUPLICATE);
 
     static {
         //  From Javadoc: implementations are thread-safe and instances are typically cached and reused.
@@ -81,25 +85,25 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static String getErrorResponse(BindingResult result) {
+    public static List<String> getErrorDetails(BindingResult result) {
         return result.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
-                .collect(Collectors.joining("<br>"));
+                .collect(Collectors.toList());
     }
 
-    public static void checkBindingResult(BindingResult result) {
-        if (result.hasErrors()) {
-            throw new IllegalRequestDataException(ValidationUtil.getErrorResponse(result));
-        }
+    public static String getConstraintsErrorText(ConstraintError constraintError,
+                                                 MessageSourceAccessor messageSourceAccessor) {
+        return messageSourceAccessor.getMessage(CONSTRAINS_I18N_MAP.get(constraintError.getFieldName())
+                .getMessageCode());
     }
 
-    public static String getConstraintsErrorInfo(Exception e, MessageSourceAccessor messageSourceAccessor) {
+    public static ConstraintError getConstraintsError(Exception e) {
         String lowerCaseMsg = e.getMessage().toLowerCase();
-        for (Map.Entry<String, String> entry : CONSTRAINS_I18N_MAP.entrySet()) {
-            if (lowerCaseMsg.contains(entry.getKey())) {
-                return messageSourceAccessor.getMessage(entry.getValue());
+        for (String constraintText : CONSTRAINS_I18N_MAP.keySet()) {
+            if (lowerCaseMsg.contains(constraintText)) {
+                return CONSTRAINS_I18N_MAP.get(constraintText);
             }
         }
-        return lowerCaseMsg;
+        return null;
     }
 }
