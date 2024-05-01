@@ -85,7 +85,7 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static List<String> getErrorDetails(BindingResult result) {
+    public static List<String> getBindingErrorDetails(BindingResult result) {
         return result.getFieldErrors().stream()
                 .map(fe -> String.format("[%s] %s", fe.getField(), fe.getDefaultMessage()))
                 .collect(Collectors.toList());
@@ -104,5 +104,9 @@ public class ValidationUtil {
             }
         }
         return null;
+    }
+
+    public static List<String> getCommonErrorDetails(Exception e) {
+        return List.of(getRootCause(e).getMessage());
     }
 }

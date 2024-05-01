@@ -44,7 +44,7 @@ public class ExceptionInfoHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
     public ErrorInfo notFoundError(HttpServletRequest req, NotFoundException e) {
-        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND, List.of(getRootCause(e).getMessage()));
+        return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND, getCommonErrorDetails(e));
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)  // 409
@@ -59,19 +59,19 @@ public class ExceptionInfoHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422
     @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo validationError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, List.of(getRootCause(e).getMessage()));
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, getCommonErrorDetails(e));
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorInfo internalError(HttpServletRequest req, Exception e) {
-        return logAndGetErrorInfo(req, e, true, APP_ERROR, List.of(getRootCause(e).getMessage()));
+        return logAndGetErrorInfo(req, e, true, APP_ERROR, getCommonErrorDetails(e));
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(BindException.class)
     public ErrorInfo notFoundError(HttpServletRequest req, BindException e) {
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, getErrorDetails(e.getBindingResult()));
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, getBindingErrorDetails(e.getBindingResult()));
     }
 
     //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
